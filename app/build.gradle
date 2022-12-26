@@ -3,6 +3,8 @@ plugins {
   id 'org.jetbrains.kotlin.android'
 }
 
+apply plugin: 'kotlin-android-extensions'
+
 android {
   namespace 'com.example.appbychatgpt'
   compileSdk 32
