@@ -30,7 +30,7 @@ class MainActivity : AppCompatActivity() {
     val alphaVantageAPI = retrofit.create(AlphaVantageAPI::class.java)
 
     // Make a request to the Alpha Vantage API to get stock prices
-    val call = alphaVantageAPI.getStockPrices(AlphaVantageAPI.API_KEY, "AAPL")
+    val call = alphaVantageAPI.getStockPrices(symbol = "AAPL")
     call.enqueue(object : Callback<StockResponse> {
       override fun onResponse(call: Call<StockResponse>, response: Response<StockResponse>) {
         // Check if the request was successful

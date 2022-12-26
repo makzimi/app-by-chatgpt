@@ -12,7 +12,8 @@ interface AlphaVantageAPI {
 
   @GET("query")
   fun getStockPrices(
-    @Query("apikey") apiKey: String,
-    @Query("symbol") symbol: String
+    @Query("function") function: String = "GLOBAL_QUOTE",
+    @Query("symbol") symbol: String,
+    @Query("apikey") apiKey: String = API_KEY
   ): Call<StockResponse>
 }
