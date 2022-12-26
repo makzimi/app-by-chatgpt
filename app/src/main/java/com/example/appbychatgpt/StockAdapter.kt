@@ -4,8 +4,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.android.synthetic.main.stock_item.view.text_view
 
-class StockAdapter(private val stocks: List<Stock>) :
+class StockAdapter(private var stocks: List<Stock>) :
   RecyclerView.Adapter<StockAdapter.StockViewHolder>() {
 
   class StockViewHolder(val view: View) : RecyclerView.ViewHolder(view)
@@ -17,7 +18,7 @@ class StockAdapter(private val stocks: List<Stock>) :
 
   override fun onBindViewHolder(holder: StockViewHolder, position: Int) {
     val stock = stocks[position]
-    holder.view.text_view.text = "${stock.`01. symbol`} - ${stock.`05. price`}"
+    holder.view.text_view.text = "${stock.name} - ${stock.price}"
   }
 
   override fun getItemCount(): Int {
