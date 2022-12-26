@@ -3,6 +3,8 @@ package com.example.appbychatgpt
 import android.os.Bundle
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -11,14 +13,22 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class MainActivity : AppCompatActivity() {
 
-  private lateinit var textView: TextView
+  private lateinit var recyclerView: RecyclerView
+  private lateinit var viewAdapter: StockAdapter
+  private lateinit var viewManager: RecyclerView.LayoutManager
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
 
-    // Initialize the TextView
-    textView = findViewById(R.id.text_view)
+    viewManager = LinearLayoutManager(this)
+    viewAdapter = StockAdapter(emptyList())
+
+    recyclerView = findViewById<RecyclerView>(R.id.recycler_view).apply {
+      setHasFixedSize(true)
+      layoutManager = viewManager
+      adapter = viewAdapter
+    }
 
     // Create a Retrofit instance
     val retrofit = Retrofit.Builder()
@@ -30,33 +40,17 @@ class MainActivity : AppCompatActivity() {
     val alphaVantageAPI = retrofit.create(AlphaVantageAPI::class.java)
 
     // Make a request to the Alpha Vantage API to get stock prices
-    val call = alphaVantageAPI.getStockPrices(symbol = "AAPL")
-    call.enqueue(object : Callback<StockResponse> {
+    alphaVantageAPI.getTopStocks().enqueue(object : Callback<StockResponse> {
       override fun onResponse(call: Call<StockResponse>, response: Response<StockResponse>) {
-        // Check if the request was successful
-        // Check if the request was successful
         if (response.isSuccessful) {
-          // Get the stock price and name from the response
-          val stock = response.body()!!.stock
-          if (stock != null) {
-            val name = stock.name
-            val price = stock.price
-
-            // Update the TextView with the stock name and price
-            textView.text = "$name: $price"
-          } else {
-            // Handle the case where the stock field is null
-            textView.text = "Error: stock field is null"
-          }
+          viewAdapter.updateStocks(response.body()!!.stocks)
         } else {
-          // Print the error message if the request was not successful
-          textView.text = response.errorBody().toString()
+          // handle error
         }
       }
 
       override fun onFailure(call: Call<StockResponse>, t: Throwable) {
-        // Handle the failure
-        textView.text = t.message
+        // handle failure
       }
     })
   }
