@@ -1,8 +1,8 @@
 package com.example.appbychatgpt
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -37,10 +37,15 @@ class MainActivity : AppCompatActivity() {
         if (response.isSuccessful) {
           // Get the stock price from the response
           val stock = response.body()!!.stock
-          val price = stock!!.price
+          if (stock != null) {
+            val price = stock.price
 
-          // Update the TextView with the stock price
-          textView.text = price
+            // Update the TextView with the stock price
+            textView.text = price
+          } else {
+            // Handle the case where the stock field is null
+            textView.text = "Error: stock field is null"
+          }
         } else {
           // Print the error message if the request was not successful
           textView.text = response.errorBody().toString()
