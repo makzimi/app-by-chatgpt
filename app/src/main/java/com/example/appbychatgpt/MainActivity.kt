@@ -38,7 +38,18 @@ class MainActivity : AppCompatActivity() {
     // Create an AlphaVantageAPI instance
     val alphaVantageAPI = retrofit.create(AlphaVantageAPI::class.java)
 
-    val stockSymbols = listOf("AAPL", "MSFT", "GOOG", "FB", "AMZN", "JNJ", "XOM", "V", "PG", "JPM")
+    val stockSymbols = listOf(
+      "AAPL", "MSFT", "GOOGL", "AMZN", "FB",
+      "BABA", "BRK.A", "BRK.B", "JPM", "XOM",
+      "V", "BAC", "WFC", "JNJ", "PG",
+      "INTC", "CVX", "PFE", "HD", "UNH",
+      "MA", "MCD", "DIS", "T", "VZ",
+      "CSCO", "PEP", "KO", "MRK", "NKE",
+      "IBM", "C", "CMCSA", "WMT", "HD",
+      "TGT", "MGM", "GE", "DOW", "UTX",
+      "BKNG", "CVS", "SPY", "XLV", "XLE",
+      "XLF", "XLK", "XLP", "XLY", "GLD"
+    )
 
     for (symbol in stockSymbols) {
       Thread {
