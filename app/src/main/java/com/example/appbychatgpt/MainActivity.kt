@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.net.SocketTimeoutException
 import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity() {
@@ -55,12 +56,17 @@ class MainActivity : AppCompatActivity() {
 
     for (symbol in stockSymbols) {
       Thread {
-        val stockResponse = alphaVantageAPI.getStockPrices(symbol = symbol).execute().body()
-        if (stockResponse?.stock != null) {
-          stocks.add(stockResponse.stock)
-          runOnUiThread {
-            viewAdapter.updateStocks(stocks)
+        try {
+          val stockResponse = alphaVantageAPI.getStockPrices(symbol = symbol).execute().body()
+          if (stockResponse?.stock != null) {
+            stocks.add(stockResponse.stock)
+            runOnUiThread {
+              viewAdapter.updateStocks(stocks)
+            }
           }
+        } catch (e: SocketTimeoutException) {
+          // Handle the timeout exception here
+          // For example, you could display a message to the user indicating that the request has timed out
         }
       }.start()
     }
