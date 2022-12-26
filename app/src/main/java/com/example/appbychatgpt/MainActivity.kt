@@ -1,17 +1,15 @@
 package com.example.appbychatgpt
 
 import android.os.Bundle
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 class MainActivity : AppCompatActivity() {
+
+  private val stocks = mutableListOf<Stock>()
 
   private lateinit var recyclerView: RecyclerView
   private lateinit var viewAdapter: StockAdapter
@@ -39,19 +37,18 @@ class MainActivity : AppCompatActivity() {
     // Create an AlphaVantageAPI instance
     val alphaVantageAPI = retrofit.create(AlphaVantageAPI::class.java)
 
-    // Make a request to the Alpha Vantage API to get stock prices
-    alphaVantageAPI.getTopStocks().enqueue(object : Callback<StockResponse> {
-      override fun onResponse(call: Call<StockResponse>, response: Response<StockResponse>) {
-        if (response.isSuccessful) {
-          viewAdapter.updateStocks(response.body()!!.stocks)
-        } else {
-          // handle error
-        }
-      }
+    val stockSymbols = listOf("AAPL", "MSFT", "GOOG", "FB", "AMZN", "JNJ", "XOM", "V", "PG", "JPM")
 
-      override fun onFailure(call: Call<StockResponse>, t: Throwable) {
-        // handle failure
-      }
-    })
+    for (symbol in stockSymbols) {
+      Thread {
+        val stockResponse = alphaVantageAPI.getStockPrices(symbol = symbol).execute().body()
+        if (stockResponse?.stock != null) {
+          stocks.add(stockResponse.stock)
+          runOnUiThread {
+            viewAdapter.updateStocks(stocks)
+          }
+        }
+      }.start()
+    }
   }
 }
