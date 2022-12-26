@@ -34,14 +34,16 @@ class MainActivity : AppCompatActivity() {
     call.enqueue(object : Callback<StockResponse> {
       override fun onResponse(call: Call<StockResponse>, response: Response<StockResponse>) {
         // Check if the request was successful
+        // Check if the request was successful
         if (response.isSuccessful) {
-          // Get the stock price from the response
+          // Get the stock price and name from the response
           val stock = response.body()!!.stock
           if (stock != null) {
+            val name = stock.name
             val price = stock.price
 
-            // Update the TextView with the stock price
-            textView.text = price
+            // Update the TextView with the stock name and price
+            textView.text = "$name: $price"
           } else {
             // Handle the case where the stock field is null
             textView.text = "Error: stock field is null"
