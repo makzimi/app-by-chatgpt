@@ -31,6 +31,7 @@ class MainActivity : AppCompatActivity() {
     // Create a Retrofit instance
     val retrofit = Retrofit.Builder()
       .baseUrl(AlphaVantageAPI.BASE_URL)
+      .client(OkHttpClient.Builder().readTimeout(30, TimeUnit.SECONDS).build())
       .addConverterFactory(GsonConverterFactory.create())
       .build()
 
