@@ -3,8 +3,8 @@ package com.example.appbychatgpt
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.stock_item.view.text_view
 
 class StockAdapter(private var stocks: List<Stock>) :
   RecyclerView.Adapter<StockAdapter.StockViewHolder>() {
@@ -18,7 +18,8 @@ class StockAdapter(private var stocks: List<Stock>) :
 
   override fun onBindViewHolder(holder: StockViewHolder, position: Int) {
     val stock = stocks[position]
-    holder.view.text_view.text = "${stock.name} - ${stock.price}"
+    val textView = holder.view.findViewById<TextView>(R.id.text_view)
+    textView.text = "${stock.name} - ${stock.price}"
   }
 
   override fun getItemCount(): Int {
